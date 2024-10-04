@@ -33,11 +33,12 @@ def simplex_step(c, A, b, solution):
     for i in range(len(A[row])):
         A[row][i] /= divider 
     for i in range(len(A)):
-        if i != row:    # update the other rows
-            fact = A[row][pivot]  / A [i][pivot]
-            b[i] -= fact * b[row]
-            for j in range(len(A[i])):
-                A[i][j] -= fact * A[row][j]
+        if i != row:
+            if A[i] [pivot] != 0:    # update the other rows
+                fact = A[row][pivot]  / A [i][pivot]
+                b[i] -= fact * b[row]
+                for j in range(len(A[i])):
+                    A[i][j] -= fact * A[row][j]
     # update the vector
     c_factor = c[pivot] / A[row][pivot] 
     for i in range(len(c)):
