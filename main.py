@@ -1,3 +1,4 @@
+import math
 def check_solved(c, A, b):
     for i in range(len(c)):
         if c[i] < 0:
@@ -7,7 +8,7 @@ def check_solved(c, A, b):
             return False   
     return True
 
-def simplex_step(c, A, b, solution):
+def simplex_step(c, A, b, solution, eps, Matrix):
     # find pivot
     pivot = None
     min_for_pivot = 10**100
@@ -29,31 +30,37 @@ def simplex_step(c, A, b, solution):
                 row = i
     # update the matrix
     divider = A[row][pivot] #save our value 
-    b[row] /= divider # normalize the pivot row
+    b[row] = b[row] / divider # normalize the pivot row
     for i in range(len(A[row])):
-        A[row][i] /= divider 
+        A[row][i] = A[row][i] / divider
     for i in range(len(A)):
         if i != row:
-            if A[i] [pivot] != 0:    # update the other rows
+            if A[i][pivot] != 0:    # update the other rows
                 fact = A[row][pivot]  / A [i][pivot]
-                b[i] -= fact * b[row]
+                b[i] -=  b[row]/fact
                 for j in range(len(A[i])):
-                    A[i][j] -= fact * A[row][j]
+                    A[i][j] -=  A[row][j]/fact
     # update the vector
-    c_factor = c[pivot] / A[row][pivot] 
+    c_factor = c[pivot] / A[row][pivot]
     for i in range(len(c)):
         c[i] -= c_factor * A[row][i]
         
     solution -= c_factor * b[row]
-    return c, A, b,solution
+    Matrix[pivot] = row
+    return c, A, b,solution, Matrix
     
 
-def simplex_method(c, A, b, epsilon, solution, maximize=True):
+def simplex_method(c, A, b, epsilon, solution, Matrix, maximize=True):
     if not maximize:
         c = [-i for i in c]
     while not check_solved(c, A, b):
-        c, A, b, solution = simplex_step(c, A, b,solution)
-    return c, A, b, solution
+        c, A, b, solution, Matrix = simplex_step(c, A, b,solution, epsilon, Matrix)
+    for i in range(len(Matrix)):
+        if(Matrix[i] is None):
+            Matrix[i] = 0
+        else:
+            Matrix[i] = b[Matrix[i]]    
+    return c, A, b, solution, Matrix
 
 
 def main():
@@ -73,9 +80,12 @@ def main():
     maximize = input("max/min: ") == "max"
     # The approximation accuracy
     epsilon  = float(input("The approximation accuracy: "))
-    c, A, b, solution = simplex_method(c, A, b, epsilon, 0, maximize)
+    Matrix = [None for i in range(len(c))]
+    c, A, b, solution, Matrix = simplex_method(c, A, b, int(-math.log10(epsilon)), 0, Matrix, maximize)
     print("Optimal solution:")
     print(solution)
+    print(Matrix)
         
 if __name__ == "__main__":
     main()
+    
