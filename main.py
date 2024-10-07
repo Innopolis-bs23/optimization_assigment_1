@@ -1,10 +1,9 @@
-import math
 def check_solved(c, A, b):
     for i in range(len(c)):
         if c[i] < 0:
             return False
     for i in range(len(A)):
-        if A[i][0] < 0:
+        if A[i][0] < 0: # xz zachem kstati eto
             return False   
     return True
 
@@ -25,10 +24,12 @@ def simplex_step(c, A, b, solution, eps, Matrix):
             ratio = 10**100
         else:
             ratio = b[i] / A[i][pivot]
-            if min_ratio is None or ratio < min_ratio and ratio > 0:  # find the minimum ratio
+            if (min_ratio is None or ratio < min_ratio) and ratio > 0:  # find the minimum ratio
                 min_ratio = ratio
                 row = i
     # update the matrix
+    if min_ratio is None: # check if solvable
+        return c, A, b,solution, Matrix, False
     divider = A[row][pivot] #save our value 
     b[row] = b[row] / divider # normalize the pivot row
     for i in range(len(A[row])):
@@ -47,20 +48,26 @@ def simplex_step(c, A, b, solution, eps, Matrix):
         
     solution -= c_factor * b[row]
     Matrix[pivot] = row
-    return c, A, b,solution, Matrix
+    return c, A, b,solution, Matrix, True
     
 
-def simplex_method(c, A, b, epsilon, solution, Matrix, maximize=True):
+def simplex_method(c, A, b, epsilon, solution, Matrix, ifSolvable,  maximize=True):
+    checkForAccuracy = 0
     if not maximize:
         c = [-i for i in c]
     while not check_solved(c, A, b):
-        c, A, b, solution, Matrix = simplex_step(c, A, b,solution, epsilon, Matrix)
+        if ifSolvable is False: # check if unbounded
+            return c, A, b, solution, Matrix, ifSolvable
+        c, A, b, solution, Matrix, ifSolvable = simplex_step(c, A, b,solution, epsilon, Matrix)
+        if abs(checkForAccuracy - solution) <= epsilon: # check for accuracy
+            return c, A, b, solution, Matrix, ifSolvable
+        checkForAccuracy = solution
     for i in range(len(Matrix)):
         if(Matrix[i] is None):
             Matrix[i] = 0
         else:
             Matrix[i] = b[Matrix[i]]    
-    return c, A, b, solution, Matrix
+    return c, A, b, solution, Matrix, ifSolvable
 
 
 def main():
@@ -81,10 +88,13 @@ def main():
     # The approximation accuracy
     epsilon  = float(input("The approximation accuracy: "))
     Matrix = [None for i in range(len(c))]
-    c, A, b, solution, Matrix = simplex_method(c, A, b, int(-math.log10(epsilon)), 0, Matrix, maximize)
-    print("Optimal solution:")
-    print(solution)
-    print(Matrix)
+    c, A, b, solution, Matrix, ifSolvable = simplex_method(c, A, b, epsilon, 0, Matrix, True, maximize)
+    if(ifSolvable):
+        print("Optimal solution:")
+        print(solution)
+        print(Matrix)
+    else:
+        print("Unbounded solution")    
         
 if __name__ == "__main__":
     main()
