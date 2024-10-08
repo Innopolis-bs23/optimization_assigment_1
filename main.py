@@ -1,10 +1,7 @@
 def check_solved(c, A, b):
     for i in range(len(c)):
         if c[i] < 0:
-            return False
-    for i in range(len(A)):
-        if A[i][0] < 0: # xz zachem kstati eto
-            return False   
+            return False  
     return True
 
 def simplex_step(c, A, b, solution, eps, Matrix):
@@ -16,7 +13,7 @@ def simplex_step(c, A, b, solution, eps, Matrix):
             min_for_pivot = c[i]
             pivot = i
     if pivot is None:   # solved already
-        return c, A, b
+        return c, A, b, solution, Matrix, True
     min_ratio = None
     row = None
     for i in range(len(A)):
@@ -53,20 +50,29 @@ def simplex_step(c, A, b, solution, eps, Matrix):
 
 def simplex_method(c, A, b, epsilon, solution, Matrix, ifSolvable,  maximize=True):
     checkForAccuracy = 0
-    if not maximize:
+    if maximize:
         c = [-i for i in c]
     while not check_solved(c, A, b):
         if ifSolvable is False: # check if unbounded
             return c, A, b, solution, Matrix, ifSolvable
         c, A, b, solution, Matrix, ifSolvable = simplex_step(c, A, b,solution, epsilon, Matrix)
-        if abs(checkForAccuracy - solution) <= epsilon: # check for accuracy
+        if abs(checkForAccuracy - solution) <= epsilon:
+            if(not maximize):
+                solution *= -1 # check for accuracy
+            for i in range(len(Matrix)):
+                if(Matrix[i] is None):
+                    Matrix[i] = 0
+                else:
+                    Matrix[i] = b[Matrix[i]]    
             return c, A, b, solution, Matrix, ifSolvable
         checkForAccuracy = solution
     for i in range(len(Matrix)):
         if(Matrix[i] is None):
             Matrix[i] = 0
         else:
-            Matrix[i] = b[Matrix[i]]    
+            Matrix[i] = b[Matrix[i]]
+    if(not maximize):
+                solution *= -1            
     return c, A, b, solution, Matrix, ifSolvable
 
 
@@ -76,7 +82,7 @@ def main():
     # Matrix of coefficients of the constraints
     A = []
     while True:
-        row_input = input("Row of matrix of the coefficients")
+        row_input = input("Row of matrix of the coefficients: ")
         if row_input == "":
             break
         row = list(map(float, row_input.split()))
