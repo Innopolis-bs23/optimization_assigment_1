@@ -48,7 +48,10 @@ def simplex_step(c, A, b, solution, eps, Matrix):
     return c, A, b,solution, Matrix, True
     
 
-def simplex_method(c, A, b, epsilon, solution, Matrix, ifSolvable,  maximize=True):
+def simplex_method(c, A, b, epsilon, maximize=True):
+    solution = 0
+    Matrix = [None for i in range(len(c))]
+    ifSolvable = True
     checkForAccuracy = 0
     if maximize:
         c = [-i for i in c]
@@ -93,8 +96,7 @@ def main():
     maximize = input("max/min: ") == "max"
     # The approximation accuracy
     epsilon  = float(input("The approximation accuracy: "))
-    Matrix = [None for i in range(len(c))]
-    c, A, b, solution, Matrix, ifSolvable = simplex_method(c, A, b, epsilon, 0, Matrix, True, maximize)
+    c, A, b, solution, Matrix, ifSolvable = simplex_method(c, A, b, epsilon, maximize)
     if(ifSolvable):
         print("Optimal solution:")
         print(solution)
