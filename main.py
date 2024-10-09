@@ -60,7 +60,7 @@ def simplex_method(c, A, b, epsilon, maximize=True):
             return c, A, b, solution, Matrix, ifSolvable
         c, A, b, solution, Matrix, ifSolvable = simplex_step(c, A, b,solution, epsilon, Matrix)
         if abs(checkForAccuracy - solution) <= epsilon:
-            if(not maximize):
+            if (not maximize):
                 solution *= -1 # check for accuracy
             for i in range(len(Matrix)):
                 if(Matrix[i] is None):
@@ -96,11 +96,11 @@ def main():
     maximize = input("max/min: ") == "max"
     # The approximation accuracy
     epsilon  = float(input("The approximation accuracy: "))
-    c, A, b, solution, Matrix, ifSolvable = simplex_method(c, A, b, epsilon, maximize)
+    c, A, b, solution, matrix, ifSolvable = simplex_method(c, A, b, epsilon, maximize)
     if(ifSolvable):
         print("Optimal solution:")
         print(solution)
-        print(Matrix)
+        print(matrix)
     else:
         print("Unbounded solution")    
         
