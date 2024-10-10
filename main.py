@@ -7,17 +7,17 @@ def check_solved(c, A, b):
 def simplex_step(c, A, b, solution, eps, X):
     # find pivot
     pivot = None
-    min_for_pivot = 10**100
+    min_pivot = None
     for i in range(len(c)):
-        if c[i] < 0 and c[i] < min_for_pivot :
-            min_for_pivot = c[i]
+        if (min_pivot is None or c[i] < min_pivot) and c[i] < 0:
+            min_pivot = c[i]
             pivot = i
     if pivot is None:   # solved already
         return c, A, b, solution, X, True
     min_ratio = None
     row = None
     for i in range(len(A)):
-        if(A[i][pivot] == 0):
+        if A[i][pivot] == 0:
             ratio = 10**100
         else:
             ratio = b[i] / A[i][pivot]
