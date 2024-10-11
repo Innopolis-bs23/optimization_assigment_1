@@ -86,7 +86,7 @@ def main():
     # X of coefficients of the constraints
     A = []
     while True:
-        row_input = input("Row of X of the coefficients: ")
+        row_input = input("Row of X of the coefficients (empty string to end reading): ")
         if row_input == "":
             break
         row = list(map(float, row_input.split()))
