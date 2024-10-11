@@ -18,8 +18,8 @@ def check_matrix_equal(a, b, epsilon):
             return False
     return True
 
-# Lab 3.1
-def test_simplex_method():
+# Ex 1
+def test_simplex_method1():
     c = [9, 10, 16, 0, 0, 0]
     A = [[18, 15, 12, 1, 0, 0], 
          [6, 4, 8, 0, 1, 0], 
@@ -28,8 +28,6 @@ def test_simplex_method():
     epsilon = 0.01
     maximize = True
     c, A, b, solution, X, _ = simplex_method(c, A, b, epsilon, maximize)
-    
-    print(*X)
     
     assert check_float_equal(solution, 400, epsilon)
     assert check_matrix_equal(A, 
@@ -46,35 +44,9 @@ def test_simplex_method():
     assert  check_lists_equal(X,
                               [0, 8, 20],
                               epsilon)
-                
-                
-# Lab 3.2
+    
+# Ex 2
 def test_simplex_method2():
-    c = [2, 3, 0, -1, 0, 0]
-    A = [[2, -1, 0, -2, 1, 0], 
-         [3, 2, 1, -3, 0, 0], 
-         [-1, 3, 0, 4, 0, 1]]
-    b = [16, 18, 24]
-    epsilon = 0.01
-    maximize = True
-    c, A, b, solution, X, _ = simplex_method(c, A, b, epsilon, maximize)
-    
-    assert check_float_equal(solution, 25.636363636363637, epsilon)
-    assert check_matrix_equal(A, 
-                 [[0, 0, -5/11, 21/11, 1, 7/11], \
-                 [1, 0, 3/11, -17/11, 0, -2/11], \
-                 [0, 1, 1/11, 9/11, 0, 3/11]], 
-                 epsilon)
-    assert check_lists_equal(c, 
-                             [0, 0, 9/11, 4/11, 0, 5/11],
-                             epsilon)
-    assert check_lists_equal(b,
-                             [254/11, 6/11, 90/11], 
-                             epsilon)
-        
-    
-    # Lab 3.3
-def test_simplex_method3():
     c = [-2, 2, -6, 0, 0, 0]
     A = [[2, 1, -2, 1, 0 ,0], 
          [1, 2, 4, 0, 1, 0], 
@@ -101,3 +73,54 @@ def test_simplex_method3():
     assert check_lists_equal(X,
                              [0, 3/4, 43/8],
                              epsilon)
+
+
+# Ex 3
+def test_simplex_method3():
+    c = [60, 70, 50, 0, 0, 0]
+    A = [[2, 3, 1, 1, 0, 0], 
+         [4, 2, 3, 0, 1, 0], 
+         [1, 2, 4, 0, 0, 1]]
+    b = [150, 300, 200]
+    epsilon = 0.01
+    maximize = True
+    c, A, b, solution, X, _ = simplex_method(c, A, b, epsilon, maximize)
+    
+    assert check_float_equal(solution, 5017.241379310345, epsilon)
+    assert  check_lists_equal(X,
+                              [44.82758620689655, 8.620689655172416, 34.48275862068965],
+                              epsilon)
+
+# Ex 4
+def test_simplex_method4():
+    c = [3, 5, 2, 4, 0, 0]
+    A = [[2, 3, 1, 2, 1, 0, 0], 
+         [1, 2, 3, 1, 0, 1, 0], 
+         [3, 1, 2, 4, 0, 0, 1]]
+    b = [12, 10, 15]
+    epsilon = 0.01
+    maximize = True
+    c, A, b, solution, X, _ = simplex_method(c, A, b, epsilon, maximize)
+    
+    assert check_float_equal(solution, 22.2, epsilon)
+    assert  check_lists_equal(X,
+                              [0, 1.8, 0, 3.3],
+                              epsilon)
+
+from math import log 
+# Ex 5
+def test_simplex_method5():
+    c = [4, 3, 5, 2, 6, 0, 0, 0, 0]
+    A = [[2, 3, 4, 1, 2, 1, 0, 0, 0], 
+         [1, 2, 1, 3, 3, 0, 1, 0, 0], 
+         [3, 1, 5, 2, 1, 0, 0, 1, 0],
+         [4, 2, 3, 4, 5, 0, 0, 0, 1]]
+    b = [30, 24, 36, 48]
+    epsilon = 0.01
+    maximize = True
+    c, A, b, solution, X, _ = simplex_method(c, A, b, epsilon, maximize)
+    
+    assert check_float_equal(solution, 61.66, epsilon)
+    assert  check_lists_equal(X,
+                              [1.33, 0, 3.67, 0, 6.33],
+                              epsilon)

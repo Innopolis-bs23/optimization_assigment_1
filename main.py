@@ -1,3 +1,5 @@
+from math import log
+
 def check_solved(c, A, b):
     for i in range(len(c)):
         if c[i] < 0:
@@ -59,7 +61,7 @@ def simplex_method(c, A, b, epsilon, maximize=True):
         if ifSolvable is False: # check if unbounded
             return c, A, b, solution, X, ifSolvable
         c, A, b, solution, X, ifSolvable = simplex_step(c, A, b, solution, epsilon, X)
-        if abs(checkForAccuracy - solution) <= epsilon: # check for accuracy
+        if abs(check_for_accuracy - solution) <= epsilon: # check for accuracy
             if not maximize:
                 solution *= -1 
             for i in range(len(X)):
@@ -67,7 +69,7 @@ def simplex_method(c, A, b, epsilon, maximize=True):
                 if X[i] is not None:
                     X[i] = b[X[i]]
             return c, A, b, solution, X, ifSolvable
-        checkForAccuracy = solution
+        check_for_accuracy = solution
     for i in range(len(X)):
         if X[i] is None:
             X[i] = 0
@@ -98,8 +100,8 @@ def main():
     c, A, b, solution, X, ifSolvable = simplex_method(c, A, b, epsilon, maximize)
     if(ifSolvable):
         print("Optimal solution:")
-        print(solution)
-        print(X)
+        print("{:.2f}".format(round(solution, int(log(0.1, epsilon)))))
+        print([round(i, int(log(0.1, epsilon))) for i in X])
     else:
         print("Unbounded solution")    
         
