@@ -54,7 +54,7 @@ def simplex_method(c, A, b, epsilon, maximize=True):
     solution = 0
     X = [None for _ in range(len(c))]
     ifSolvable = True
-    checkForAccuracy = 0
+    check_for_accuracy = 0
     if maximize:
         c = [-i for i in c]
     while not check_solved(c, A, b):
