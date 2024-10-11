@@ -99,9 +99,13 @@ def main():
     epsilon  = float(input("The approximation accuracy: "))
     c, A, b, solution, X, ifSolvable = simplex_method(c, A, b, epsilon, maximize)
     if(ifSolvable):
+        num_of_zeros = round(1/log(0.1, epsilon))
         print("Optimal solution:")
-        print("{:.2f}".format(round(solution, int(log(0.1, epsilon)))))
-        print([round(i, int(log(0.1, epsilon))) for i in X])
+        print(("{:." + str(num_of_zeros) + "f}" ).format(round(solution, num_of_zeros)))
+        output_X = ""
+        for x in X:
+            output_X += ("{:." + str(num_of_zeros) + "f}" ).format(round(x, num_of_zeros)) + " "
+        print(output_X)
     else:
         print("Unbounded solution")    
         
